@@ -1,17 +1,40 @@
-<div id="layoutoptions">LAYOUT:
-	<button class="button layout masonry" onclick="iso_layout('masonry')">Perfect fit</button>
-	<button class="button layout fitRows" name="layout" onclick="iso_layout('fitRows')">Line fit</button>
-	<button class="button layout vertical" name="layout" onclick="iso_layout('vertical')">Classic</button>
+<button id="isotoggle" href="#options" class="button" onclick="toggle_option('isotope');return false;">Isotope</button>
+<div class="isotopeoptions">
+	<div>LAYOUT:
+	<select id="layout" onchange="iso_layout(this.options[this.selectedIndex].value);return false;">
+		<option value="vertical">Classic</option>
+		<option value="masonry">Perfect Fit</option>
+		<option value="fitRows">Line fit</option>
+	</select></div>
+	
+	<div>SORT:
+	<select id="sort" onchange="iso_sort(this.options[this.selectedIndex].value);return false;">
+		<option value="lastbump">Last Bumped</option>
+		<option value="lastpost">Last Posted</option>
+		<option value="threadage">Thread Age</option>
+		<option value="postcount">Post Count</option>
+		<option value="random">Random</option>
+	</select></div>
+	
+	<div>FILTER:	
+	<select id="filter" onchange="iso_filter(this.options[this.selectedIndex].value);return false;">
+		<option value="0">None</option>
+		<option value="10800">3 hours</option>
+		<option value="43200">12 hours</option>
+		<option value="86400">1 day</option>
+		<option value="604800">1 week</option>
+		<option value="2629743">1 month</option>
+	</select></div>
 </div>
-<div id="sortoptions">SORT: 
-	<button class="button sort lastbump" onclick="iso_sort('lastbump')">Last Bumped</button>
-	<button class="button sort lastpost" onclick="iso_sort('lastpost')">Last Posted</button>
-	<button class="button sort threadage" onclick="iso_sort('threadage')">Age</button>
-	<button class="button sort postcount" onclick="iso_sort('postcount')">Postcount</button>
-</div>
-<div id="filteroptions">FILTER INACTIVE THREADS:
-	<button class="button filter 0" onclick="iso_filter('0')">None</button>
-	<button class="button filter 43200" onclick="iso_filter('43200')">12 hours</button>
-	<button class="button filter 86400" onclick="iso_filter('86400')">1 day</button>
-	<button class="button filter 604800" onclick="iso_filter('604800')">1 week</button>
+
+<div>STYLE:
+<select id="filter" onchange="switchStyle(this.options[this.selectedIndex].value);return false;">
+	<option value="default">Default</option>
+	<option value="Material">Material</option>
+	<option value="Post Office">Post Office</option>
+</select></div>
+
+<div>
+	<button id="nokotoggle" class="button" onclick="toggle_option('noko');return false;">Noko</button>
+	<button id="monatoggle" class="button" onclick="toggle_option('mona');return false;">Load Mona font</button>
 </div>

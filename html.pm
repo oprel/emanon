@@ -141,9 +141,7 @@ sub build_pages($$) {
 	, '<div class="boardnav">'
 	, board_navigation($dir, $board)
 	, '</div><div id="options" class="optionmenu hide">'
-	, include("options.html")
-	
-	 . '&#8203;</div>'
+	, include("options.html") . '&#8203;</div>'
 	, '</div><div class="grid">'
 	;
 
