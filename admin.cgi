@@ -125,6 +125,7 @@ if ($submit eq 'Rebuild all threads') {
         }
         build_pages($dir, $board);
     }
+	system("/bin/bash encode.sh");
     admin_redirect();
 }
 elsif ($submit eq 'Rebuild index') {
@@ -527,8 +528,8 @@ elsif ($ip) {
     flock $read, LOCK_SH;
     while (<$read>) {
         chomp;
-        /^([^\s]+) [0-9]+ ([^\s]+) ([0-9]+) ([0-9]+)$/;
-        my ($log_ip, $log_board, $log_thread, $log_postnum) = ($1, $2, $3, $4);
+        /^([^\s]+) [0-9]+ ([^\s]+) ([0-9]+) ([0-9]+) ([0-1])$/;
+        my ($log_ip, $log_board, $log_thread, $log_postnum, $log_sage) = ($1, $2, $3, $4, $5);
         if ( RC4(SECRET_KEY, decode_base64($log_ip)) eq $ip ) {
             push(@{$userposts{"$log_board,$log_thread"}}, $log_postnum);
         }
@@ -812,6 +813,7 @@ sub rebuild_index {
     my %boards = BOARDS;
     while (my ($board, $value) = each(%boards)) {
         build_pages($dir, $board);
+		system("/bin/bash encode.sh $board/index.html ");
     }
 }
 

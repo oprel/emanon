@@ -5,12 +5,32 @@ use CGI::Carp 'fatalsToBrowser';
 use Encode qw/decode/;
 use Fcntl ':flock';
 
+sub form_data() {
+    my (%input, $buffer);
+    if (length ($ENV{'QUERY_STRING'}) > 0) {
+        $buffer = $ENV{'QUERY_STRING'};
+    }
+    my @pairs = split(/&/, $buffer);
+    for my $pair (@pairs) {
+        my ($name, $value) = split(/=/, $pair);
+        $input{$name} = uri_unescape($value);
+    }
+    return %input;
+}
+
+sub abort($) {
+    my $msg = shift;
+    print "Content-type: text/html\n\n";
+    print '<strong>Error: ' . $msg . '</strong>';
+    exit;
+}
+
+my $time   = time;
 my %form   = form_data();
 my $board  = $form{'board'};
 my $thread = $form{'thread'};
 my $posts  = $form{'read'};
 my $dir    = $ENV{'SCRIPT_NAME'};
-my $time   = time;
 
 ($board )  = $board  =~ /^([a-z]+)$/;
 ($thread)  = $thread =~ /^([0-9]+)$/;
@@ -33,8 +53,8 @@ while (my $line = <$read>) {
     if ($line =~ /^<div class=\"post\" id=\"([0-9]+)\">/) {
         my ($postnum) = $line =~ /^<div class=\"post\" id=\"([0-9]+)\">/;
         $max_post = $postnum;
-        if (@list[0] =~ /^l[0-9]+$/) {
-            my ($last) = @list[0] =~ /^l([0-9]+)$/;
+        if ($list[0] =~ /^l[0-9]+$/) {
+            my ($last) = $list[0] =~ /^l([0-9]+)$/;
             $last = 80 if $last > 80;
 			$line =~ s/<!--(.*?)->//g;
             push @post_list, $line;
@@ -62,7 +82,7 @@ while (my $line = <$read>) {
         }
     }
     else {
-        $line =~ s{Return<\/a> }{Return</a> <a href=\"$dir/read.cgi/$board/$thread\">Entire thread</a> } unless $posts eq '1-' ;
+        $line =~ s{Return<\/a> }{Return</a> <a href=\"$dir/read.cgi/$board/$thread\">Entire thread</a> } unless $posts eq '1-' ;#"
         if ($header) {
             $footer = $line;
         }
@@ -78,7 +98,7 @@ if ($max_post > 100 && $max_range) {
     my $next_upper  = $max_range + 100;
     $next_upper = '' if $next_upper > $max_post;
     if ($next_lower <= $max_post) {
-        $footer =~ s{1-100</a>}{1-100</a> <a href=\"$dir/read.cgi/$board/$thread/$next_lower-$next_upper\">Next 100 posts</a>};
+        $footer =~ s{1-100</a>}{1-100</a> <a href=\"$dir/read.cgi/$board/$thread/$next_lower-$next_upper\">Next 100 posts</a>};#"
     }
 }
 $footer =~ s/<!--(.*?)->//g;
@@ -92,24 +112,4 @@ sub uri_unescape($) {
     $str =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
     $str = decode('utf8', $str);
     return $str;
-}
-
-sub form_data() {
-    my (%input, $buffer);
-    if (length ($ENV{'QUERY_STRING'}) > 0) {
-        $buffer = $ENV{'QUERY_STRING'};
-    }
-    my @pairs = split(/&/, $buffer);
-    for my $pair (@pairs) {
-        my ($name, $value) = split(/=/, $pair);
-        $input{$name} = uri_unescape($value);
-    }
-    return %input;
-}
-
-sub abort($) {
-    my $msg = shift;
-    print "Content-type: text/html\n\n";
-    print '<strong>Error: ' . $msg . '</strong>';
-    exit;
 }

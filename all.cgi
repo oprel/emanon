@@ -8,7 +8,7 @@ use lib '.';
 
 use constant RECENT_NUMBER =>	15;					#How many posts to load.
 use constant SHOW_ALL	   =>	0;					#Also display saged posts? (0 = no, 1 = yes)
-use constant FILTER_BOARDS => ('time','sageru');	#Pick which boards not to display.
+use constant FILTER_BOARDS => ('hidden');	#Pick which boards not to display.
 
 my $dir     = $ENV{'SCRIPT_NAME'};
   ($dir)    = $dir =~ /^(.*)\/[^\/]*$/;
@@ -83,8 +83,8 @@ if ((stat("log.txt"))[9] eq $logtime){
 					;
 				}
 			}
-			close $read; $i++;
-			last if $i == RECENT_NUMBER;
+		close $read; $i++;
+		last if $i == RECENT_NUMBER;
 		}else{ $seen{'x'} = 1 };
 	}
     print $write '</div></body></html>';

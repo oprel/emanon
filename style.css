@@ -3,16 +3,22 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+
 html {
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
 }
 body {
     margin: 0;
-    font: 17px/1 "Times New Roman", serif;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
+    font-size: 17px;
+    font-family:Mona, sans-serif;
+    line-height:1em;
+
 }
+.threadpost{
+    display:none;
+}
+
 h1,
 h2,
 h3,
@@ -28,7 +34,7 @@ ul {
 a {
     text-decoration: none;
 }
-a:visited{
+.post a:visited{
 	color:purple;
 }
 button {
@@ -37,8 +43,8 @@ button {
     letter-spacing: inherit;
     cursor: pointer;
     padding: 3px 6px;
-	transition: .15s;
-	color:inherit;
+    transition: .15s;
+    color:inherit;
 }
 ::-moz-focus-inner {
     padding: 0;
@@ -57,7 +63,7 @@ body#subback,
 body#image {
     background: #C5AD99;
     background-image: url(data:image/gif;base64,R0lGODdhPAA8AJkAANCznMWtmbOektzApiwAAAAAPAA8AAAC/5SPqcvtCJ6c1IUAsgZ48wuG4qV1njYMZxmkbjYGQpipJeDmuo7zdYoTRSwiRGuFg3lio4HpswF9SJzhobpMSXsZAVQoS6KcpoH3MsPIZsAtVWAbDoVYziuZ3nhhnavWVASVFkYVNdbixKbH0mXQQ8I0FdERVnOi4tXWcqFVZXKAqAbJNEoTdUT28vSlZvUoFRmpxIdh87LXw1Z4cAc5wzFIulIbt+FS6MELVBJsMPK7utqTAmfrbAPoqAlCVknaOkWsclej7VzlRyYJAhc+slTllDNFbZBIq+10I3WGJks77cc4bCSgAcsUp1SESd9+hRv4Q9wiT/aWwWIHMEQaXP/GyNn52EEfjIrYoGGkpVHaGEuF2kTZiFASvm8qp+2YR4xlophqHEKpcwlFOWjO0IB6cGRQMBlMm86oAFXBnzVRHcwbs2xFDkQ8lt28aSzMPHWFCHHNKkaDo44etk5LM7DerFJ/6hSTM6xSWrUkgGDieOIIl46IgNJxl7JwrnY34tzViuQiw2c1+k662wmoVhqC3yD29YOPLnhIbqBE9hOl0tBmLht6VDqy5NPPOKmQYabFRko+I7OAtEQYoTZeTAaLPQslI3d8RHPWzXiQpc3DlnsD468Wy+g1p58S9WTL7yItG5E5DgPtxOa/v7u5sgSOP62ARWr+GFimUcEsurX/wraQcslVFxgVIdhSgg243GZfW7EBAo+BCwqFW3L+hSYGf0pYhAsT9ghESFo7CHRXNIq5ch86cCxw0FI0ZXdOEQlQtQCNMjqjwIvi6YgaSV/9qENIQA75VXCzxdBIgJ005NBF2rBz23MxKKVMN/14otYezXyYR4bAuccOfFFK80lZfWDAESAGAhQOAlvpFU1yKUmnJikuUjXNc5J0GSZT0iUE3gf9+IejRwO+duYay+3DzkWBIPSYkZHYc1h7NLGB0IEjPahHP0Zl9A4TrW2TJVmBYNTneJfSkGmKoi1ayjmqIjlZcaGwFxxtbjB1ymd2ihVprgaWEqqHUzZajSYFKYq3J7FgZneqn1zAgtxIomQEqilTFjcYcibimlodUjrKrXqyOWqZFAUAADs=);
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 1em auto;
 }
 body#threadpage {
@@ -70,14 +76,16 @@ textarea {
 }
 #frontpage textarea{
     width: 100%;
-    max-width: 550px; 
+}
+#frontpage form{
+        max-width: 550px; 
 }
 textarea:focus,
 input:focus {
-    z-index: 5;
+    z-index: 100;
 }
 a {
-    color: #00C;
+    color: #00F;
     text-decoration: underline;
     cursor: pointer;
     transition: .15s;
@@ -91,14 +99,15 @@ label {
 /*frontpage*/
 
 div.shell {
-    border: 1px outset #000;
+    border: 1px outset #FFF;
     padding: 0 7px 7px 7px;
-    margin: 0 2.5% 0 2.5%;
+    margin: 1em 2.5% 0 2.5%;
     background: #CCFFCC;
     text-align: left;
+
 }
 div.shell-thread {
-    border: 1px outset #000;
+    border: 1px outset #FFF;
     padding: 0 7px 7px 7px;
     background: #EFEFEF;
     width: 99%;
@@ -108,10 +117,11 @@ div.shell-thread {
 }
 div.shell > div,
 div.shell-thread > div {
-    border: 1px inset #000;
+    border: 1px inset #FFF;
     padding: 7px;
     margin-top: 7px;
     display: block;
+	position:relative;
 }
 .columnwidth {
     max-width: 49%;
@@ -120,14 +130,22 @@ div.shell-thread > div {
 .grid {
     margin: .5em 2% .25em;
 }
+.boardnav {
+    overflow:auto;
+}
+.boardnav img{
+    margin:-5px 2px -2px;
+}
+
 .boardnav form[name="boardselector"] {
     display: none;
 }
 .boardnav .right {
+    font-weight:bold;
     float: right;
-	display: inline-block;
+    display: inline-block;
 }
-#options > div {
+#options div {
     display: inline-block;
     font-weight: bold;
     padding: 6px
@@ -174,6 +192,14 @@ div.shell-thread > div {
     left: 0;
     right: 0;
 }
+#frontpage .quickscroll{
+    position:absolute;
+    right:10px;
+    top:-20px;
+	padding-top:26px;
+    z-index:5;
+}
+
 .subject h2 {
     display: inline;
     line-height: 120%;
@@ -183,6 +209,7 @@ div.shell-thread > div {
     color: #F00;
     text-decoration: none;
 }
+
 .subject a:hover {
     text-decoration: underline;
 }
@@ -279,10 +306,12 @@ div.shell-thread > div {
 /* Markup style */
 
 :lang(ja) {
+    
     font-family: Mona, 'MS PGothic';
     font-size: 12pt;
     white-space: pre;
 }
+
 code {
     display: inline-block;
     white-space: pre;
@@ -319,6 +348,7 @@ blockquote:hover {
 }
 #image .admin {
     float: right;
+    z-index:20;
     border: none;
 }
 .thumb {
@@ -375,17 +405,16 @@ blockquote:hover {
     .boardnav .right {
         float: none;
     }
+    .boardnav select {
+        width:180px;
+    }
     .boardnav form[name="boardselector"] {
         display: inline-block !important;
-        margin: 0px 15px 4px;
+        margin: 0px 7px 4px;
         font-size: 0.8em;
     }
     .boardbar {
         display: none !important;
-    }
-    @font-face {
-        font-family: "Mona";
-        src: url(mona.woff) format("woff");
     }
     .shell-thread .num {
         padding: 3px;
@@ -396,6 +425,23 @@ blockquote:hover {
         width:40%;
         min-width:50px;
     }
+
+}
+div.header:nth-child(3){
+    display:none;
+}
+.shell.header{
+    margin:-.5em 2.5% .5em;
+}
+.header h1{
+    font-size:1.5em;
+    font-weight: normal;
+}
+.header img{
+    margin-bottom:.25em;
+}
+#rules{
+padding:14px;
 }
 .hide {
     display: none !important;

@@ -8,17 +8,16 @@ sub print_preview($$$$$$$$;$$$) {
     $name    = encode('utf8', $name);
     $comment = encode('utf8', $comment);
     $parsed_comment = encode('utf8', $parsed_comment);
-    my $css = -e "$board/" . PAGE_CSS ? "$board/" . PAGE_CSS : PAGE_CSS;
     print
       "Content-type: text/html\n\n"
     , '<!DOCTYPE html>'
     , '<html lang="' . LANGUAGE_CODE . '">'
     , '<head>'
-    , (-e "$board/meta.html") ? include("$board/meta.html") : include("meta.html")
+    , (-e "meta.html") ? include("meta.html") : ''
     , '<title>Post Preview</title>'
-    , '<link rel="stylesheet" href="' . $dir . '/' . $css . '">'
     , '<script async src="' . $dir . '/script.js"></script>'
 	, (board_settings("PRETTIFY_CODE", $board)) ? '<script async src="' . $dir . '/run_prettify.js"></script>' : ''
+	, stylesheets($dir, $board)
     , '</head>'
     , '<body id="threadpage">'
     , '<div class="links"><a href="' . $dir . '/' . $board . '">Return</a> '
@@ -57,7 +56,6 @@ sub print_preview($$$$$$$$;$$$) {
 
 sub write_thread($$$$$$$$$;$$$$$) {
     my ($dir, $board, $thread, $last_bumped, $last_posted, $closed, $permasage, $postcount, $subject, $name, $trip, $time, $sage, $parsed_comment) = @_;
-    my $css = -e "$board/" . PAGE_CSS ? "$board/" . PAGE_CSS : PAGE_CSS;
     if ($time) {
         $last_bumped = $time unless $sage;
         $last_posted = $time;
@@ -71,13 +69,13 @@ sub write_thread($$$$$$$$$;$$$$$) {
       '<!DOCTYPE html>'
     , '<html lang="' . LANGUAGE_CODE . '">'
     , '<head>'
-    , (-e "$board/meta.html") ? include("$board/meta.html") : include("meta.html")
+    , (-e "meta.html") ? include("meta.html") : ''
     , '<!--' . $last_bumped . ',' . $last_posted . ',' . $closed . ',' . $permasage . ',' . $postcount . '-->'
     , '<title>' . $subject . '</title>'
-    , '<link rel="stylesheet" href="' . $dir . '/' . $css . '">'
     , '<script async src="' . $dir . '/script.js"></script>'
 	, (board_settings("PRETTIFY_CODE", $board)) ? '<script async src="' . $dir . '/run_prettify.js"></script>' : ''
-    , '</head>'
+    , stylesheets($dir, $board)    
+	, '</head>'
     , '<body id="threadpage">'
 	, '<div id="hover"></div>'
     , '<div><span class="links">'
@@ -118,7 +116,6 @@ sub write_thread($$$$$$$$$;$$$$$) {
 sub build_pages($$) {
     my ($dir, $board) = @_;
     my @thread_list = read_thread_list($board);
-    my $css = -e "$board/" . PAGE_CSS ? "$board/" . PAGE_CSS : PAGE_CSS;
     my $title;
     my %boards = BOARDS;
     while (my ($key, $value) = each(%boards)) {
@@ -131,20 +128,22 @@ sub build_pages($$) {
       '<!DOCTYPE html>'
     , '<html lang="' . LANGUAGE_CODE . '">'
     , '<head>'
-    , (-e "$board/meta.html") ? include("$board/meta.html") : include("meta.html")
+    , (-e "meta.html") ? include("meta.html") : ''
     , '<title>' . $title . '</title>'
-    , '<link rel="stylesheet" href="' . $dir . '/' . $css . '">'
-    , '<script async src="' . $dir . '/isotope.pkgd.min.js"></script>'
+	, '<script async src="' . $dir . '/isotope.pkgd.min.js"></script>'
     , '<script async src="' . $dir . '/script.js"></script>'
 	, (board_settings("PRETTIFY_CODE", $board)) ? '<script async src="' . $dir . '/run_prettify.js"></script>' : ''
+    , stylesheets($dir, $board)   
     , '</head>'
     , '<body id="frontpage">'
+	, (-e "$board/header.html") ? '<div class="header shell"><div><span id="top" class="quickscroll"><a href="#bottom" title="Jump to bottom">&#9660;</a></span>' . include("$board/header.html") . '</div></div>' : ''
     , '<div class="shell">'
 	, '<div class="boardnav">'
 	, board_navigation($dir, $board)
 	, '</div><div id="options" class="optionmenu hide">'
-	, include("isotopeoptions.html") . '&#8203;</div>'
-    , (-e "$board/header.html") ? '<div class="header"><div>' . include("$board/header.html") . '</div></div>' : ''
+	, include("options.html")
+	
+	 . '&#8203;</div>'
 	, '</div><div class="grid">'
 	;
 
@@ -167,7 +166,7 @@ sub build_pages($$) {
 			  , ':<span class="postcount">' . $postcount . '</span></span>')	
 		, ']</span> '
         , '<h2>'
-        , "<a href=\"$dir/read.cgi/$board/$thread$a\">" . $subject . '</a>'
+        , "<a href=\"$dir/read.cgi/$board/$thread\">" . $subject . '</a>'
         , '</h2>'
         , '</div>'
 		;
@@ -245,7 +244,7 @@ sub build_pages($$) {
 	;
 	print_postform($write, $dir, $board);
 	print $write
-	  '</div>'
+	  '</div><div class="links" style="text-align:center;width:100%;margin-top:1em;font-size:0.8em;"><a href="/new.cgi">Secret</a><a href="/"> Area of VIP Quality</a> - <a href="/about/">About</a> - <a href="http://textboard.dynu.com">Emanon BBS</a></div>'
     , '</body>'
     , '</html>'
     ;
@@ -257,10 +256,10 @@ sub build_pages($$) {
       '<!DOCTYPE html>'
     , '<html lang="' . LANGUAGE_CODE . '">'
     , '<head>'
-    , (-e "$board/meta.html") ? include("$board/meta.html") : include("meta.html")
+    , (-e "meta.html") ? include("meta.html") : ''
     , '<title>All Threads</title>'
-    , '<link rel="stylesheet" href="' . $dir . '/' . $css . '">'
     , '<script async src="' . $dir . '/script.js"></script>'
+    , stylesheets($dir, $board)
     , '</head>'
     , '<body id="subback">'
     , '<div class="links shell"><div>'
@@ -299,7 +298,7 @@ sub print_reply($$$$$$$$$$;$$) {
     , 'Name: '
     , '<span class="name',board_settings("SHOW_SAGE", $board) && $sage?' sage':'','">' . $name . '</span>' #!
     , ' '
-    , '<span class="trip">' . $trip . '</span>' #!
+    , '<span class="trip">' . $trip . '</span> ' #!
 	, ($timesettings eq 'SAGERU') ? '' : '<span class="time">' . parse_date($time, $board) . '</span>'
 	, '</div>'
     , backlinks($dir, $board, $thread, $postnum, $newpost, $newcom)
@@ -346,6 +345,7 @@ sub print_postform($$$;$$$$) {
     elsif ($thread == 0) {
         print $fh
           '<div id="threadform">'
+		, '<span id="bottom" class="quickscroll"><a href="#top" title="Jump to top">&#9650;</a></span>'
         , '<h2>New Thread</h2>'
         , '<form action="' . $dir . '/post.cgi" method="post" onsubmit="set_cookie(name.value,\'name\');this.reply.disabled=true">'
         , '<input type="hidden" name="board" value="' . $board . '">'
@@ -388,7 +388,7 @@ sub print_postlinks($$$$$$) {
     my ($fh, $dir, $board, $thread, $postcount, $page) = @_;
     if ($page eq 'front' || $page eq 'footer') {
         print $fh
-          $page eq 'front' ? '<div class="links"><a class="quickreplytoggle hide" onclick="quick_reply(' . $thread . ')">Quick-Reply</a>  <a href="' . $dir . '/read.cgi/' . $board . '/' . $thread . '">Entire thread</a> <a class="threadlistlink" href="#threadlist">Thread list</a>' : '<a href="' . $dir . '/' . $board . '/">Return</a> '
+          $page eq 'front' ? '<div class="links"><a class="quickreplytoggle hide" onclick="quick_reply(' . $thread . ')">Reply</a>  <a href="' . $dir . '/read.cgi/' . $board . '/' . $thread . '">Entire thread</a> <a class="threadlistlink" href="#threadlist">Thread list</a>' : '<a href="' . $dir . '/' . $board . '/">Return</a> '
         , $postcount > 50  ? '<a href="' . $dir . '/read.cgi/' . $board . '/' . $thread . '/l50">Last 50 posts</a> ' : ''
         , $postcount > 100 ? '<a href="' . $dir . '/read.cgi/' . $board . '/' . $thread . '/1-100">1-100</a> ' : ''
 		, $page eq 'front' ? '</div>' : ''
@@ -401,6 +401,19 @@ sub print_postlinks($$$$$$) {
         , $postcount > 100 ? '<br><small>Pages: ' . pagination($dir, $board, $thread, $postcount) . '</small>' : ''
         ;
     }
+}
+
+sub stylesheets($$){
+	my ($dir, $board) = @_;
+    my $css = -e "$board/" . PAGE_CSS ? "$board/" . PAGE_CSS : PAGE_CSS;
+	my $a = '<link rel="stylesheet" title="default" href="' . $dir . '/' . $css . '">';
+	if (defined(ALT_CSS)){
+		my %altsheets = ALT_CSS;
+		foreach my $name (sort keys %altsheets) {
+			$a .= '<link rel="stylesheet" disabled title="' . $name . '" href="' . $dir . '/' . $altsheets{$name} . '">';
+		}
+	}
+	return $a;
 }
 
 sub board_navigation($$){
@@ -426,7 +439,7 @@ sub board_navigation($$){
 		$n++;
 	}
 	$menu .= ' ]</span></span><span class="right">';
-	$menu .= '<span>[ <a href="images/">Images</a> ]</span>' if (-e "$board/images/index.html");
+	$menu .= '<span>[ <a href="/images/">Images</a> ]</span>' if (-e "images/index.html");
 	$menu .= '<span class="optiontoggle hide">[ <a onclick="toggle_class(\'optionmenu\', \'hide\')">Options</a> ]</span>'
 	      .  '<span>[ <a href="' . $dir . '/">Home</a> ]</span></span>';
 	return $menu;
