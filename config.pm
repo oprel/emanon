@@ -44,6 +44,7 @@ use constant NAME_LENGTH    => '600';   # Max name length (does not include trip
 
 # Page display
 use constant PAGE_CSS        => 'style.css';      # Stylesheet filename	[site-wide]
+use constant ALT_CSS         => '0';              # Alternative stylesheets (0 = disabled)
 use constant PAGE_POSTS      => '5';              # Posts shown in preview excluding the first post
 use constant PAGE_THREADS    => '10';             # Threads shown on front page
 use constant PAGE_THREADLIST => '40';             # Thread links on threadlist
@@ -52,3 +53,5 @@ use constant PRETTIFY_CODE	 => '0';			  # Syntax highlighting in codeblocks? (0 
 #----------------------------------------------------------------------------------------------------
 
 use constant FORCE_ANON_LOUNGE		=> '1';
+
+1;
