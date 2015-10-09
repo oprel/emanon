@@ -128,7 +128,6 @@ if ($ENV{'REQUEST_METHOD'} eq 'POST') {
     write_thread($dir, $board, $thread, $last_bumped, $last_posted, $closed, $permasage, $postcount, $subject, $name, $trip, $time, $sage, $parsed_comment);
     write_log($ip, $time, $board, $thread, $postcount, $sage);
     build_pages($dir, $board);
-    system("/bin/bash encode.sh $board/res/$thread.html $board/index.html ");
     redirect($dir, $board, $thread, $postcount, $sage, $noko);
 }
 else {
@@ -136,7 +135,6 @@ else {
     while (my ($key, $value) = each(%boards)) {
         if (!-d "$key/") { mkdir("$key", 0755) || die "Cannot create directory: $!"; }
         build_pages($dir, $key);
-		system("/bin/bash encode.sh $board/res/$thread.html $board/index.html");
     }
     redirect($dir, 0, 0, 0, 0, 0);
 }
