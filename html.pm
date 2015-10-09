@@ -160,10 +160,10 @@ sub build_pages($$) {
         , '<div class="subject">'
         , '<span class="threadpost">[' . $i . ':' . $postcount
 		, (board_settings("TIME_SETTINGS", $board) eq 'SAGERU') ? '' : (
-			  '<span class="sortinfo hide">:<span class="lastbump">' . $last_bumped . '</span>'
-			  , ':<span class="lastpost">' . $last_posted . '</span>'
-			  , ':<span class="threadage">' . $thread . '</span>'
-			  , ':<span class="postcount">' . $postcount . '</span></span>')	
+		  '<span class="sortinfo hide">:<span class="lastbump">' . $last_bumped . '</span>'
+		  , ':<span class="lastpost">' . $last_posted . '</span>'
+		  , ':<span class="threadage">' . $thread . '</span>'
+		  , ':<span class="postcount">' . $postcount . '</span></span>')	
 		, ']</span> '
         , '<h2>'
         , "<a href=\"$dir/read.cgi/$board/$thread\">" . $subject . '</a>'
@@ -174,7 +174,7 @@ sub build_pages($$) {
         # retrieve first and most recent posts for the front page display
         my (@post_list, $post_recent);
         my $l = 0;
-	      my $readback = File::ReadBackwards->new("$board/res/$thread.html") || die "Cannot read thread file: $!";
+	    my $readback = File::ReadBackwards->new("$board/res/$thread.html") || die "Cannot read thread file: $!";
         while( defined( my $line = $readback->readline ) ) {
             $l++;
             chomp $line;
@@ -244,8 +244,7 @@ sub build_pages($$) {
 	;
 	print_postform($write, $dir, $board);
 	print $write
-	  '</div><div class="links" style="text-align:center;width:100%;margin-top:1em;font-size:0.8em;"><a href="/new.cgi">Secret</a><a href="/"> Area of VIP Quality</a> - <a href="/about/">About</a> - <a href="http://textboard.dynu.com">Emanon BBS</a></div>'
-    , '</body>'
+	  '</body>'
     , '</html>'
     ;
     close $write;
