@@ -13,7 +13,7 @@ sub print_preview($$$$$$$$;$$$) {
     , '<!DOCTYPE html>'
     , '<html lang="' . LANGUAGE_CODE . '">'
     , '<head>'
-    , (-e "meta.html") ? include("meta.html") : ''
+    , (-e "$board/meta.html") ? include("$board/meta.html") : include("meta.html")
     , '<title>Post Preview</title>'
     , '<script async src="' . $dir . '/script.js"></script>'
 	, (board_settings("PRETTIFY_CODE", $board)) ? '<script async src="' . $dir . '/run_prettify.js"></script>' : ''
@@ -69,7 +69,7 @@ sub write_thread($$$$$$$$$;$$$$$) {
       '<!DOCTYPE html>'
     , '<html lang="' . LANGUAGE_CODE . '">'
     , '<head>'
-    , (-e "meta.html") ? include("meta.html") : ''
+    , (-e "$board/meta.html") ? include("$board/meta.html") : include("meta.html")
     , '<!--' . $last_bumped . ',' . $last_posted . ',' . $closed . ',' . $permasage . ',' . $postcount . '-->'
     , '<title>' . $subject . '</title>'
     , '<script async src="' . $dir . '/script.js"></script>'
@@ -128,7 +128,7 @@ sub build_pages($$) {
       '<!DOCTYPE html>'
     , '<html lang="' . LANGUAGE_CODE . '">'
     , '<head>'
-    , (-e "meta.html") ? include("meta.html") : ''
+    , (-e "$board/meta.html") ? include("$board/meta.html") : include("meta.html")
     , '<title>' . $title . '</title>'
 	, '<script async src="' . $dir . '/isotope.pkgd.min.js"></script>'
     , '<script async src="' . $dir . '/script.js"></script>'
@@ -256,7 +256,7 @@ sub build_pages($$) {
       '<!DOCTYPE html>'
     , '<html lang="' . LANGUAGE_CODE . '">'
     , '<head>'
-    , (-e "meta.html") ? include("meta.html") : ''
+    , (-e "$board/meta.html") ? include("$board/meta.html") : include("meta.html")
     , '<title>All Threads</title>'
     , '<script async src="' . $dir . '/script.js"></script>'
     , stylesheets($dir, $board)
