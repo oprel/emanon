@@ -10,13 +10,10 @@ html {
 }
 body {
     margin: 0;
-    font-size: 17px;
-    font-family:Mona, sans-serif;
+    font-size: 18px;
+    font-family:Times New Roman, sans-serif;
     line-height:1em;
 
-}
-.threadpost{
-    display:none;
 }
 
 h1,
