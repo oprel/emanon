@@ -1,0 +1,28 @@
+AddDefaultCharset utf-8
+
+<FilesMatch "\.(txt|pm)$">
+Deny from all
+</FilesMatch>
+
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresDefault "access plus 1 hour"
+ExpiresByType image/x-icon "access plus 1 year”
+ExpiresByType image/gif "access plus 1 month"
+ExpiresByType image/png "access plus 1 month"
+ExpiresByType image/jpg "access plus 1 month"
+ExpiresByType image/jpeg "access plus 1 month"
+ExpiresByType text/css "access 1 month”
+ExpiresByType application/javascript "access plus 1 year"
+</IfModule>
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^read.cgi/([a-z]+)/([0-9]+)/?$ $1/res/$2.html
+RewriteRule ^read.cgi/([a-z]+)/([0-9]+)/([0-9l\-\,]+)$ read.cgi?board=$1&thread=$2&read=$3
+RewriteRule ^([a-z]+)/all$ $1/subback.html
+
+#redirects for sageru boards
+RewriteRule ^read.cgi/time/([0-9]+)/$ read.cgi/time/$1/1-
+RewriteRule ^time/res/([0-9]+).html$ read.cgi/time/$1/1-
+</IfModule>

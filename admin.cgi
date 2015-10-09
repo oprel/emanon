@@ -125,7 +125,6 @@ if ($submit eq 'Rebuild all threads') {
         }
         build_pages($dir, $board);
     }
-	system("/bin/bash encode.sh");
     admin_redirect();
 }
 elsif ($submit eq 'Rebuild index') {
@@ -813,7 +812,6 @@ sub rebuild_index {
     my %boards = BOARDS;
     while (my ($board, $value) = each(%boards)) {
         build_pages($dir, $board);
-		system("/bin/bash encode.sh $board/index.html ");
     }
 }
 
