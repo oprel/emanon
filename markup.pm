@@ -2,18 +2,21 @@ use strict;
 
 sub markup($$$$) {
     my ($str, $dir, $board, $thread) = @_;
-	my $siteurl = SITE_URL;
+    my $siteurl = SITE_URL;
+    my $protocol = qr{(?:(?:https?|s?ftps?|ircs?|git|ssh|telnet|gopher)://|(?:mailto|news|magnet):)};
+    my $urlpattern = qr{$protocol[a-z0-9-]+(?:\.[a-z0-9-]+)+(?::[0-9]{4})?(?:[/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+)?};
+    
     $str =~ s/&gt;&gt;(([1-9][0-9]*[\-\,]?)+)/<a href="$dir\/read.cgi\/$board\/$thread\/$1" class="postlink">&gt;&gt;$1<\/a>/g;
-	$str =~ s/((https?):\/\/$siteurl([^\s]+))/<a href="$3">&rarr;$3<\/a>/g;
-    my $urlpattern = qr{(?:https?|ftp)://[a-z0-9-]+(?:\.[a-z0-9-]+)+(?::[0-9]{4})?(?:[/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+)?};
-    $str =~ s/($urlpattern)/my $l = markup_escape($1); '<a href="' . $l . '">' . $l . '<\/a>'/eg;
     $str =~ s/^@@(\n[^\n])/\x{3000}$1/gm;
     $str =~ s/(^|\n+)(\x{3000}.+?)(\n\n+|\Z)/$1 . '<p><span lang="ja">' . markup_escape($2) . '<\/span><\/p>' . $3/emgs;
     $str =~ s/(<span lang="ja">)\x{3000}\n/$1/g;
 
+
+
     my @tags = (
                 '#'       # bracket escape
               , 'code'    # code (also escapes brackets)
+              , 'url'     # urls
               , 'b'       # bold
               , 'i'       # italics
               , 'o'       # overline
@@ -31,28 +34,40 @@ sub markup($$$$) {
 
     for (@tags) { # parse tags one by one
         my $tag = $_;
-        if ($tag =~ /^(#|code)$/) { # TAGS THAT DO NOT NEED NESTING
+        if ($tag =~ /^(#|code|url)$/) { # TAGS THAT DO NOT NEED NESTING
 
-            while ($str =~ /(.*?)\[$tag\](.*?)\[\/$tag\](.*)$/gs) {
-
-                my ($left, $content, $right) = ($1, $2, $3);
+            while ($str =~ /(.*?)\[$tag(=.*?)?\](.*?)\[\/$tag\](.*)$/gs) {
+ 
+                my ($left, $param, $content, $right) = ($1, $2, $3, $4); 
+                                    
 
                 $content =~ s/\[/&#91;/g;
                 $content =~ s/\]/&#93;/g;
                 $content =~ s/&gt;/&#gt;/g;
 
-                if ($tag =~ /^(#)$/) {
+                if (!($param) && $tag =~ /^(#)$/) {
                     $str = $left . $content . $right;
                 }
-                elsif ($tag =~ /^(code)$/) {
+                elsif (!($param) && $tag =~ /^(code)$/) {
                     $str = $left . '<code>' . $content . '</code>' . $right;
+                }
+                elsif ($tag =~ /^(url)$/) {
+                    my $url;
+                    if ($param){
+                        $url = markup_escape(substr($param, 1));
+                    }
+                    else {
+                        $url = markup_escape($content);
+                    }
+                    if ($url !~ /$protocol/){ $url = 'http://' . $url;}
+                    $str = $left . '<a href="' . $url . '">' . $content . '</a>' . $right;
                 }
             }
 
         }
     }
 
-    # QUOTE NESTING
+     # QUOTE NESTING
     while ($str =~ /(.*\n(&gt;\s?)*|\A(&gt;\s?)*)&gt;\s?(.*?)(\n.*|\Z)/gs) {
         my ($left, $content, $right) = ($1, $4, $5);
 
@@ -76,7 +91,7 @@ sub markup($$$$) {
 
     for (@tags) {
         my $tag = $_;
-        if ($tag !~ /^(#|code)$/) { # TAGS THAT CAN BE NESTED
+        if ($tag !~ /^(#|code|url)$/) { # TAGS THAT CAN BE NESTED
 
             while ($str =~ /(.*)\[$tag\](.*?)\[\/$tag\](.*)/gs) {
 
@@ -131,6 +146,9 @@ sub markup($$$$) {
         $malformed++ while $str =~ /\[\/$tag\]/g;
     }
     $str =~ s/\n/<br>/g;
+
+    $str =~ s/(?<!href=")((https?):\/\/$siteurl(?::[0-9]{4})?(?:[\/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+)?)/<a href="$3">&rarr;$3<\/a>/g;
+    $str =~ s/(?<!href=")($urlpattern)/my $l = markup_escape($1); '<a href="' . $l . '">' . $l . '<\/a>'/eg;
     return markup_unescape($str, 0);
 }
 
