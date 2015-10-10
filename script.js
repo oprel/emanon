@@ -112,7 +112,7 @@ var iso_filter = function(filterValue){
 var quote = function(postnumber,thread) {
 	if (frontpage){
 		toggle_class(thread , "hide", 0);
-		iso.arrange();
+		if(isotope){iso.arrange();};
 	}
     var text = '>>'+postnumber+'\n';
     var textarea=document.getElementById("form"+thread).message;
