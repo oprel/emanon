@@ -313,6 +313,7 @@ code {
     display: inline-block;
     white-space: pre;
     overflow: auto;
+    overflow-y: hidden;
     width: 100%;
 }
 blockquote {
