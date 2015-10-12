@@ -4,7 +4,7 @@ sub markup($$$$) {
     my ($str, $dir, $board, $thread) = @_;
     my $siteurl = SITE_URL;
     my $protocol = qr{(?:(?:https?|s?ftps?|ircs?|git|ssh|telnet|gopher)://|(?:mailto|news|magnet):)};
-    my $urlpattern = qr{$protocol[a-z0-9-]+(?:\.[a-z0-9-]+)+(?::[0-9]{4})?(?:[/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+)?};
+    my $urlpattern = qr{$protocol[a-z0-9-]+(?:\.[a-z0-9-]+)+(?::[0-9]{4})?(?:(?!<).)*(?:[/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+)?};
     
     $str =~ s/&gt;&gt;(([1-9][0-9]*[\-\,]?)+)/<a href="$dir\/read.cgi\/$board\/$thread\/$1" class="postlink">&gt;&gt;$1<\/a>/g;
     $str =~ s/^@@(\n[^\n])/\x{3000}$1/gm;
@@ -145,7 +145,7 @@ sub markup($$$$) {
         $malformed++ while $str =~ /\[$tag\]/g;
         $malformed++ while $str =~ /\[\/$tag\]/g;
     }
-    $str =~ s/(?<!href=")((https?):\/\/$siteurl(?::[0-9]{4})?(?:[\/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+)?)/<a href="$3">&rarr;$3<\/a>/g;
+    $str =~ s/(?<!href=")(?!<\/a>)((https?):\/\/$siteurl(?::[0-9]{4})?(?:(?!<).)*(?:[\/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+)?)/<a href="$3">&rarr;$3<\/a>/g;
     $str =~ s/(?<!href=")($urlpattern)/my $l = markup_escape($1); '<a href="' . $l . '">' . $l . '<\/a>'/eg;
     
     $str =~ s/\n/<br>/g;
