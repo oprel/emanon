@@ -145,10 +145,10 @@ sub markup($$$$) {
         $malformed++ while $str =~ /\[$tag\]/g;
         $malformed++ while $str =~ /\[\/$tag\]/g;
     }
-    $str =~ s/\n/<br>/g;
-
     $str =~ s/(?<!href=")((https?):\/\/$siteurl(?::[0-9]{4})?(?:[\/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+)?)/<a href="$3">&rarr;$3<\/a>/g;
     $str =~ s/(?<!href=")($urlpattern)/my $l = markup_escape($1); '<a href="' . $l . '">' . $l . '<\/a>'/eg;
+    
+    $str =~ s/\n/<br>/g;
     return markup_unescape($str, 0);
 }
 
