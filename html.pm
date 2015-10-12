@@ -394,7 +394,7 @@ sub print_postlinks($$$$$$) {
     elsif ($page eq 'header') {
         print $fh
           '<a href="' . $dir . '/' . $board . '/">Return</a> '
-        , $postcount > 50 ? '<a href="' . $dir . '/read.cgi/' . $thread . '/l50">Last 50 posts</a>' : ''
+        , $postcount > 50 ? '<a href="' . $dir . '/read.cgi/' . $board . '/' . $thread . '/l50">Last 50 posts</a>' : ''
         , $postcount > 100 ? '<br><small>Pages: ' . pagination($dir, $board, $thread, $postcount) . '</small>' : ''
         ;
     }
