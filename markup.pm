@@ -8,11 +8,12 @@ sub markup($$$$) {
         $protocol                                           #uri
         [a-z0-9-]+ (?:\.[a-z0-9-]+)+                        #host
         (?::[0-9]{4})?                                      #port
-        (?:(?!<).)*                                         #escape anchor tags
         (?:[/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+)?   #path
     }x;
     
     $str =~ s/&gt;&gt;(([1-9][0-9]*[\-\,]?)+)/<a href="$dir\/read.cgi\/$board\/$thread\/$1" class="postlink">&gt;&gt;$1<\/a>/g;
+    $str =~ s/(?:$protocol$siteurl((?::[0-9]{4})?(?:[\/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+))?)/<a href="$1">&rarr;$1<\/a>/g;
+    $str =~ s/($urlpattern)/my $l = markup_escape($1); '<a href="' . $l . '">' . $l . '<\/a>'/eg;
     
     if ($str !~ /\[aa\]/){
         $str =~ s/^@@(\n[^\n])/\x{3000}$1/gm;
@@ -61,6 +62,7 @@ sub markup($$$$) {
                 }
                 elsif ($tag =~ /^(url)$/) {
                     my $url;
+                    $content =~ s/<a.*?>|<\/a>//g;
                     if ($param){
                         $url = markup_escape(substr($param, 1));
                     }
@@ -153,8 +155,6 @@ sub markup($$$$) {
         $malformed++ while $str =~ /\[$tag\]/g;
         $malformed++ while $str =~ /\[\/$tag\]/g;
     }
-    $str =~ s/(?<!href=")((https?):\/\/$siteurl(?:(?!<).)*(?::[0-9]{4})?(?:[\/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+)?)/<a href="$3">&rarr;$3<\/a>/g;
-    $str =~ s/(?<!href=")($siteurl)/my $l = markup_escape($1); '<a href="' . $l . '!">' . $l . '<\/a>!'/eg;
     
     $str =~ s/\n/<br>/g;
     return markup_unescape($str, 0);
