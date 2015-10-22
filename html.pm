@@ -429,14 +429,16 @@ sub board_navigation($$){
 	}
 	$menu .= '</select></form><span class="boardbar">';
 	$menu .= '<span>[ <a href="' . $dir . '/all.cgi">all</a> ]</span>' if (-e "all.cgi");
-	$menu .= '<span>[ ';
+	$menu .= '<span class="boards">[ ';
 	foreach my $name (@boards) {
 		$menu .= ' / ' if ($n != 0);
-		$menu .= ($name eq $board) ? $name : '<a href="' . $dir . '/' . $name . '/">' . $name . '</a>';
+		$menu .= ($name eq $board) ? $name : '<a class="' . $name . '" href="' . $dir . '/' . $name . '/">' . $name . '</a>';
 		$n++;
 	}
-	$menu .= ' ]</span></span><span class="right">';
-	$menu .= '<span>[ <a href="/images/">Images</a> ]</span>' if (-e "images/index.html");
+	$menu .= ' ]</span>';
+    $menu .= '<span>[ <a href="images/">Images</a> ]</span>' if (-e "images/index.html");    
+    $menu .= '</span><span class="right">';
+	$menu .= '<span>[ <a href="$board/images/">Images</a> ]</span>' if (-e "$board/images/index.html");
 	$menu .= '<span class="optiontoggle hide">[ <a onclick="toggle_class(\'optionmenu\', \'hide\')">Options</a> ]</span>'
 	      .  '<span>[ <a href="' . $dir . '/">Home</a> ]</span></span>';
 	return $menu;
