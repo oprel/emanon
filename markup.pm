@@ -12,7 +12,7 @@ sub markup($$$$) {
     }x;
     
     $str =~ s/&gt;&gt;(([1-9][0-9]*[\-\,]?)+)/<a href="$dir\/read.cgi\/$board\/$thread\/$1" class="postlink">&gt;&gt;$1<\/a>/g;
-    $str =~ s/(?:$protocol$siteurl((?::[0-9]{4})?(?:[\/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+))?)/<a href="$1">&rarr;$1<\/a>/g;
+    $str =~ s/(?:$protocol$siteurl((?::[0-9]{4})?(?:[\/?](?:[\x21-\x25\x27-\x5A\x5E-\x7E]|&amp;)+))?)/my $l = markup_escape($1); '<a href="' . $l . '">&rarr;' . $l . '<\/a>'/eg;
     $str =~ s/($urlpattern)/my $l = markup_escape($1); '<a href="' . $l . '">' . $l . '<\/a>'/eg;
     
     if ($str !~ /\[aa\]/){
@@ -62,7 +62,8 @@ sub markup($$$$) {
                 }
                 elsif ($tag =~ /^(url)$/) {
                     my $url;
-                    $content =~ s/<a.*?>|<\/a>//g;
+                    $content =~ s/<a.*>|<\/a>//g;
+                    $param =~ s/<a.*>|<\/a>//g;
                     if ($param){
                         $url = markup_escape(substr($param, 1));
                     }
