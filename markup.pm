@@ -62,8 +62,8 @@ sub markup($$$$) {
                 }
                 elsif ($tag =~ /^(url)$/) {
                     my $url;
-                    $content =~ s/<a.*>|<\/a>//g;
-                    $param =~ s/<a.*>|<\/a>//g;
+                    $content =~ s/<a.*?>|<\/a>//g;
+                    $param =~ s/<a.*?>|<\/a>//g;
                     if ($param){
                         $url = markup_escape(substr($param, 1));
                     }
