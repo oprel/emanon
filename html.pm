@@ -31,7 +31,7 @@ sub print_preview($$$$$$$$;$$$) {
     , 'Comment: <br>'
     , '<div class="comment">' . $parsed_comment . '</div>'
     , '<div class="form">'
-    , '<form action="' . $dir . '/post.cgi" method="post" onsubmit="set_cookie(name.value);this.reply.disabled=true">'
+    , '<form action="' . $dir . '/post.cgi" method="post" onsubmit="set_cookie(name.value,\'name\')" this.reply.disabled=true">'
     , '<input type="hidden" name="board" value="' . $board . '">'
     , '<input type="hidden" name="noko" value="on">'
     , $newthread ? '' : '<input type="hidden" name="thread" value="' . $thread . '">'
@@ -344,7 +344,7 @@ sub print_postform($$$;$$$$) {
           '<div id="threadform">'
 		, '<span id="bottom" class="quickscroll"><a href="#top" title="Jump to top">&#9650;</a></span>'
         , '<h2>New Thread</h2>'
-        , '<form action="' . $dir . '/post.cgi" method="post" onsubmit="set_cookie(name.value,\'name\');this.reply.disabled=true">'
+        , '<form action="' . $dir . '/post.cgi" method="post" onsubmit="set_cookie(name.value,\'name\')" this.reply.disabled=true">'
         , '<input type="hidden" name="board" value="' . $board . '">'
         , '<table>'
         , '<tr>'
@@ -364,7 +364,7 @@ sub print_postform($$$;$$$$) {
     }
     else {
         print $fh
-          '<form action="' . $dir . '/post.cgi" method="post" id="form' . $thread . '" onsubmit="set_cookie(name.value);this.reply.disabled=true">'
+          '<form action="' . $dir . '/post.cgi" method="post" id="form' . $thread . '" onsubmit="set_cookie(name.value,\'name\')" this.reply.disabled=true">'
         , '<input type="hidden" name="board" value="' . $board . '">'
         , $noko ? '<input type="hidden" name="noko" value="on">' : ''
         , '<input type="hidden" name="thread" value="' . $thread . '">'
