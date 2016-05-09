@@ -85,6 +85,7 @@ if ($thread) {
     $postcount++;
     abort('Post limit reached') if $postcount > board_settings("POST_LIMIT", $board);
     abort('Thread is closed')   if $closed;
+    abort('Malformed thread.') unless ($last_bumped && $last_posted);
     if (board_settings("THREAD_NECROMANCY", $board)) {
         my $limit = board_settings("NECROMANCY_DAYS", $board) * 86400;
         my $diff;
